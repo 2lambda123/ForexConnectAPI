@@ -37,8 +37,7 @@ class OrdersMonitor:
     def wait(self, time, order_id):
         self.__order_id = order_id
 
-        order_row = self.find_order(order_id)
-        if order_row is not None:
+        if (order_row := self.find_order(order_id)) is not None:
             return order_row
 
         self.__event.wait(time)
@@ -86,9 +85,8 @@ def main():
                 str_account = account.account_id
                 print("AccountID='{0}'".format(str_account))
 
-            offer = Common.get_offer(fx, str_instrument)
 
-            if offer is None:
+            if (offer := Common.get_offer(fx, str_instrument)) is None:
                 raise Exception("The instrument '{0}' is not valid".format(str_instrument))
 
             login_rules = fx.login_rules
@@ -121,8 +119,7 @@ def main():
 
             else:
                 # Waiting for an order to appear or timeout (default 30)
-                order_row = orders_monitor.wait(30, order_id)
-                if order_row is None:
+                if (order_row := orders_monitor.wait(30, order_id)) is None:
                     print("Response waiting timeout expired.\n")
                 else:
                     print("The order has been added. OrderID={0:s}, "
