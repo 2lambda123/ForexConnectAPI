@@ -12,6 +12,33 @@ import common_samples
 
 
 def parse_args():
+    """Parse command line arguments and return the parsed arguments.
+    Parameters:
+        - None
+    Returns:
+        - args (argparse.Namespace): Parsed command line arguments.
+    Processing Logic:
+        - Parse command line arguments.
+        - Add main arguments.
+        - Add instrument and timeframe arguments.
+        - Add direction, rate, and lots arguments.
+        - Add account arguments.
+        - Return parsed arguments.
+    Example:
+        >>> args = parse_args()
+        >>> print(args.instrument)
+        'EUR_USD'
+        >>> print(args.timeframe)
+        'H1'
+        >>> print(args.direction)
+        'buy'
+        >>> print(args.rate)
+        1.2345
+        >>> print(args.lots)
+        0.01
+        >>> print(args.account)
+        'demo'"""
+    
     parser = argparse.ArgumentParser(description='Process command parameters.')
     common_samples.add_main_arguments(parser)
     common_samples.add_instrument_timeframe_arguments(parser, timeframe=False)
@@ -24,17 +51,30 @@ def parse_args():
 
 class OrdersMonitor:
     def __init__(self):
+        """This function initializes the class object with empty order ID and order dictionary, and creates an event object.
+        Parameters:
+            - None
+        Returns:
+            - None
+        Processing Logic:
+            - Initializes class object with empty order ID and order dictionary.
+            - Creates an event object."""
+        
         self.__order_id = None
         self.__orders = {}
         self.__event = Event()
 
     def on_added_order(self, _, __, order_row):
+        """"""
+        
         order_id = order_row.order_id
         self.__orders[order_id] = order_row
         if self.__order_id == order_id:
             self.__event.set()
 
     def wait(self, time, order_id):
+        """"""
+        
         self.__order_id = order_id
 
         if (order_row := self.find_order(order_id)) is not None:
@@ -45,18 +85,24 @@ class OrdersMonitor:
         return self.find_order(order_id)
 
     def find_order(self, order_id):
+        """"""
+        
         if order_id in self.__orders:
             return self.__orders[order_id]
         else:
             return None
 
     def reset(self):
+        """"""
+        
         self.__order_id = None
         self.__orders.clear()
         self.__event.clear()
 
 
 def main():
+    """"""
+    
     str_user_id = 'username'
     str_password = 'password'
     str_url = 'www.fxcorporate.com/Hosts.jsp'

@@ -11,17 +11,44 @@ import common_samples
 
 class OrdersMonitor:
     def __init__(self):
+        """Initializes the order_id, orders dictionary, and event object.
+        Parameters:
+            - None
+        Returns:
+            - None
+        Processing Logic:
+            - Initialize order_id, orders, and event.
+            - Order_id is set to None.
+            - Orders is an empty dictionary.
+            - Event is an instance of the Event class."""
+        
         self.__order_id = None
         self.__orders = {}
         self.__event = Event()
 
     def on_added_order(self, _, __, order_row):
+        """Adds an order to the order dictionary and sets an event if the order id matches the stored order id.
+        Parameters:
+            - self (object): The current object.
+            - _ (object): Unused parameter.
+            - __ (object): Unused parameter.
+            - order_row (object): The order row to be added.
+        Returns:
+            - None: No return value.
+        Processing Logic:
+            - Adds order to dictionary.
+            - Sets event if order id matches.
+            - Only runs if order id matches.
+            - Unused parameters are ignored."""
+        
         order_id = order_row.order_id
         self.__orders[order_id] = order_row
         if self.__order_id == order_id:
             self.__event.set()
 
     def wait(self, time, order_id):
+        """"""
+        
         self.__order_id = order_id
 
         if (order_row := self.find_order(order_id)) is not None:
@@ -32,12 +59,16 @@ class OrdersMonitor:
         return self.find_order(order_id)
 
     def find_order(self, order_id):
+        """"""
+        
         if order_id in self.__orders:
             return self.__orders[order_id]
         else:
             return None
 
     def reset(self):
+        """"""
+        
         self.__order_id = None
         self.__orders.clear()
         self.__event.clear()
@@ -57,6 +88,8 @@ class Args:
 
 
 def main():
+    """"""
+    
     args = Args
 
     str_user_id = args.l
