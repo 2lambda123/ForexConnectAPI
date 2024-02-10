@@ -12,6 +12,16 @@ import common_samples
 
 
 def parse_args():
+    """"Parse command line arguments and return parsed arguments."
+    Parameters:
+        - None
+    Returns:
+        - args (argparse.Namespace): Parsed command line arguments.
+    Processing Logic:
+        - Use argparse module for parsing.
+        - Add common arguments using helper functions.
+        - Return parsed arguments."""
+    
     parser = argparse.ArgumentParser(description='Process command parameters.')
     common_samples.add_main_arguments(parser)
     common_samples.add_instrument_timeframe_arguments(parser, timeframe=False)
@@ -24,17 +34,41 @@ def parse_args():
 
 class OrdersMonitor:
     def __init__(self):
+        """Creates a new instance of the class.
+        Parameters:
+            - None
+        Returns:
+            - None
+        Processing Logic:
+            - Initializes private variables.
+            - Does not take any arguments."""
+        
         self.__order_id = None
         self.__orders = {}
         self.__event = Event()
 
     def on_added_order(self, _, __, order_row):
+        """Function:
+        Adds an order to the list of orders and sets an event if the order id matches the current order id.
+        Parameters:
+            - self (object): The current object.
+            - _ (object): Unused parameter.
+            - __ (object): Unused parameter.
+            - order_row (object): The order to be added.
+        Returns:
+            - None: This function does not return anything.
+        Processing Logic:
+            - Adds order to list of orders.
+            - Sets event if order id matches current order id."""
+        
         order_id = order_row.order_id
         self.__orders[order_id] = order_row
         if self.__order_id == order_id:
             self.__event.set()
 
     def wait(self, time, order_id):
+        """"""
+        
         self.__order_id = order_id
 
         if (order_row := self.find_order(order_id)) is not None:
@@ -45,12 +79,16 @@ class OrdersMonitor:
         return self.find_order(order_id)
 
     def find_order(self, order_id):
+        """"""
+        
         if order_id in self.__orders:
             return self.__orders[order_id]
         else:
             return None
 
     def reset(self):
+        """"""
+        
         self.__order_id = None
         self.__orders.clear()
         self.__event.clear()
@@ -73,6 +111,8 @@ class Args:
 
 
 def main():
+    """"""
+    
     args = Args
     str_user_id = args.l
     str_password = args.p
